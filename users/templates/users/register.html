@@ -1,12 +1,20 @@
 {% extends 'base_html5.html' %}
+{% load static %}
 
 {% block body %}
     {{ block.super }}
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
+    <div class="login_window_container">
+        <div class="login_window">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="login_buttons">
+                    <button type="submit">Зарегистрировать</button>
+                    <a href="/auth/login/" class="like_button">Вход</a>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <a href="/auth/login/">Login</a>
+    <link rel="stylesheet" href="{% static 'users/css/login.css' %}">
 {% endblock %}

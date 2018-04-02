@@ -7,11 +7,102 @@ body {
     justify-content: center;
     align-items: center;
 
+    font-family: sans-serif;
+
     color: hsl(45, 34%, 84%);
     background-color: hsl(40, 0%, 24%);
 }
 
 
+a {
+    text-decoration: none;
+}
+
+
 button {
-    color: hsl(45, 34%, 84%);
+    outline: none;
+    padding: 15px 30px 15px 30px;
+    border: none;
+    font-size: 12pt;
+
+    color: hsl(44, 70%, 82%);
+    background-color: hsl(10, 2%, 20%);
+
+    transition-duration: 0.2s;
+}
+
+
+button:hover {
+    cursor: pointer;
+
+    color: hsl(44, 96%, 82%);
+    background-color: hsl(10, 2%, 25%);
+    text-shadow:  -6px -3px 10px black;
+    box-shadow: 0px 0px 10px 0px hsl(44, 96%, 82%);
+}
+
+
+button:active {
+    color: hsl(44, 96%, 88%);
+    background-color: hsl(10, 2%, 29%);
+    box-shadow: 0px 0px 10px 2px hsl(44, 96%, 88%);
+}
+
+
+input {
+    outline: none;
+    padding: 7.5px 15px 7.5px 15px;
+    font-size: 12pt;
+
+    background-color: hsl(10, 2%, 20%);
+    border: 0px solid black;
+    color: hsl(44, 70%, 82%);
+    text-shadow:  -6px -3px 10px black;
+    box-shadow: 0px 0px 10px 0px hsl(44, 96%, 82%);
+
+    transition-duration: 0.2s;
+}
+
+
+input:hover {
+    color: hsl(44, 96%, 82%);
+    background-color: hsl(10, 2%, 25%);
+    text-shadow:  -6px -3px 10px black;
+    box-shadow: 0px 0px 10px 2px hsl(44, 96%, 82%);
+}
+
+
+input:focus {
+    color: hsl(44, 96%, 88%);
+    background-color: hsl(10, 2%, 29%);
+    box-shadow: 0px 0px 10px 2px hsl(44, 96%, 88%);
+}
+
+
+.like_button {
+    padding: 15px 30px 15px 30px;
+    border: none;
+    font-size: 12pt;
+
+    color: hsl(44, 70%, 82%);
+    background-color: hsl(10, 2%, 20%);
+
+    transition-duration: 0.2s;
+}
+
+
+.like_button:hover {
+    cursor: pointer;
+
+    color: hsl(44, 96%, 82%);
+    background-color: hsl(10, 2%, 25%);
+    text-shadow:  -6px -3px 10px black;
+    box-shadow: 0px 0px 10px 0px hsl(44, 96%, 82%);
+}
+
+
+.like_button:active {
+    color: hsl(44, 96%, 88%);
+    background-color: hsl(10, 2%, 29%);
+    box-shadow: 0px 0px 10px 2px hsl(44, 96%, 88%);
 }
