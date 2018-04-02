@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: hsl(45, 34%, 84%);
+    background-color: hsl(40, 0%, 24%);
+}
+
+
+button {
+    color: hsl(45, 34%, 84%);
+}

@@ -1,0 +1,21 @@
+- model: auth.user
+  pk: 1
+  fields:
+    username: admin
+    first_name: Admin
+    last_name: Adminovich
+    password: pbkdf2_sha256$100000$N5r4Q2Iwzyb3$74//sSArF/DMJZMssDDVpxoL9im9s0op3kz4ZQJdvck=
+    # password is 'admin' too
+    is_active: True
+    is_superuser: True
+
+- model: auth.user
+  pk: 2
+  fields:
+    username: user
+    first_name: User
+    last_name: Userovich
+    password: pbkdf2_sha256$100000$9dl6EuzmE61m$YqJQDDqyajwTdb4Pt1Eqok8l4qqA6jELaHnfzDwmFxw=
+    # password is 'user' too
+    is_active: True
+    is_superuser: False

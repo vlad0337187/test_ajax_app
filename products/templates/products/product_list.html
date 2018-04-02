@@ -1,0 +1,23 @@
+{% load static %}
+
+
+<h1 class="products_header">Список товаров, которые нужно купить:</h1>
+{% verbatim %}
+<div id="product_list" class="product_list">
+    <ol v-if="products.length" class="products">
+        <li v-for="(product, index) in products" class="product">
+            <span class="product_index">№: {{ index }}</span>&nbsp&nbsp
+            Продукт: <input type="text" v-bind:value="product.name" v-on:change="product_changed(product)"></input>&nbsp&nbsp
+            Количество: <input type="number" min=0 max=1000000 step=0.1 v-bind:value="product.amount" v-on:change="product_changed(product)"></input>&nbsp&nbsp
+            <button v-on:click="move_higher(product)">⋀</button>
+            <button v-on:click="move_lower(product)">⋁</button>
+        </li>
+    </ol>
+    <div v-else="products" class="products">
+        Products are absent yet.
+        Please, add some.
+    </div>
+</div>
+{% endverbatim %}
+ <script type="text/javascript" src="{% static "products/js/product_list.js" %}"></script>
+ <link rel="stylesheet" href="{% static 'products/css/product_list.css' %}">

@@ -1,0 +1,38 @@
+.top_panel {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 0 0 70px 0;
+    padding: 0 30px 0 30px;
+    width: calc(100% - 60px);
+    height: 70px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+
+    background-color: hsl(40, 0%, 50%);
+    box-shadow: 0 0 20px 3px hsla(40, 0%, 0%, 0.6);
+}
+
+
+.top_panel button {
+    padding: 0 30px 0 30px;
+    border: none;
+    font-size: 12pt;
+
+    background-color: hsl(10, 2%, 20%);
+
+    transition-duration: 0.2s;
+}
+
+
+.top_panel button:hover {
+    cursor: pointer;
+
+    /*color: hsl(45, 44%, 91%);*/
+    color: hsl(44, 96%, 82%);
+    background-color: hsl(10, 2%, 25%);
+    text-shadow:  -6px -3px 10px black;
+}

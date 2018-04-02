@@ -1,0 +1,39 @@
+- model: products.ProductList
+  pk: 1
+  fields:
+    user: 1
+
+- model: products.ProductList
+  pk: 2
+  fields:
+    user: 2
+
+
+- model: products.Product
+  pk: 1
+  fields:
+    product_list: 1
+    name: White Bread
+    amount: 1
+
+- model: products.Product
+  pk: 2
+  fields:
+    product_list: 1
+    name: Black Bread
+    amount: 0.5
+
+- model: products.Product
+  pk: 3
+  fields:
+    product_list: 2
+    name: White Bread
+    amount: 1
+
+- model: products.Product
+  pk: 4
+  fields:
+    product_list: 2
+    name: Black Bread
+    amount: 0.5
+

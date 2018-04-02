@@ -1,0 +1,14 @@
+{% extends 'base_html5.html' %}
+
+{% block body %}
+  {{ block.super }}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+  {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+  {% endif %}
+  <a href="/auth/register/">Register</a>
+{% endblock %}
