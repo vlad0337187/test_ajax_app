@@ -111,3 +111,15 @@ input:focus {
     background-color: hsl(10, 2%, 29%);
     box-shadow: 0px 0px 10px 2px hsl(44, 96%, 88%);
 }
+
+
+.buttons_horizontal_plane {
+    /* Plane, which has same color, as buttons. */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+
+    background-color: hsl(10, 2%, 20%);
+}
+

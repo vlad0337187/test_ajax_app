@@ -154,7 +154,7 @@ const product_list = new Vue({
 
         this.sort_products_by_order()
 
-        this.update_on_server_several(this.products[index], this.products[index + 1])
+        this.update_on_server_several([this.products[index], this.products[index + 1]])
     },
 
     move_higher: function(product) {
@@ -170,7 +170,7 @@ const product_list = new Vue({
 
         this.sort_products_by_order()
 
-        this.update_on_server_several(this.products[index], this.products[index - 1])
+        this.update_on_server_several([this.products[index], this.products[index - 1]])
     },
 
     add_product: async function() {
@@ -196,15 +196,19 @@ const product_list = new Vue({
                 break
             }
         }
-        //let index = this.products.push(product) - 1
+
         try {
-            await this.create_on_server(product)
+            product = await this.create_on_server(product)
+            this.products.push(product)
         }
         catch (err) {
             this.products.pop()
             alert(`Извините, произошла ошибка при добавлении продукта: ${err}`)
+            return
         }
-        this.give_order_values()  // also updates order on server
+
+        this.give_order_values()
+        this.update_on_server(product)
 
         // hack to work without server connection (index would be applied after response from server)
         let products_without_index = this.products.filter(el => !el.id)
@@ -212,6 +216,7 @@ const product_list = new Vue({
         products_without_index.map(el => { el.id = create_random_index() })
         products_without_index = this.products.filter(el => !el.id)
         console.log('products_without_index after: ', products_without_index)
+        // end hack
 
         console.log('we got product: ', product)
     },
@@ -219,7 +224,9 @@ const product_list = new Vue({
     delete_product: async function(product) {
         if (confirm(`Вы уверены, что хотите удалить продукт "${product.name}" из списка ?`)) {
             //this.products = this.products.filter(p => p != product)
-            this.delete_on_server(product)
+            if (this.delete_on_server(product)) {
+                this.products = this.products.filter(el => el.id != product.id)
+            }
         }
     },
 
@@ -233,7 +240,7 @@ const product_list = new Vue({
         delete productNoId.id
 
         const response = await fetch(`/api/v1/products/${product.id}/`, {
-		    method: 'put',
+		    method: 'patch',
 		    headers: {
 			    'Content-Type': 'application/json',
 			    'X-CSRFToken': get_csrf_token(),
@@ -242,11 +249,25 @@ const product_list = new Vue({
 		    body: JSON.stringify(productNoId),
 		})
 		const body = await response.json()
-		console.log('updating on server: ', body)
+		console.log('updated on server: ', body)
+		return body
     },
 
     update_on_server_several: async function(products) {
-        console.log('products changed: ', products)
+        console.log('updating several on server: ', JSON.stringify(products))
+
+        const response = await fetch(`/api/v1/products/set_order/`, {
+		    method: 'patch',
+		    headers: {
+			    'Content-Type': 'application/json',
+			    'X-CSRFToken': get_csrf_token(),
+			    },
+		    credentials: 'same-origin',
+		    body: JSON.stringify(products),
+		})
+		const body = await response.json()
+		console.log('updated several on server: ', body)
+		return body
     },
 
     create_on_server: async function(product) {
@@ -262,7 +283,7 @@ const product_list = new Vue({
 		})
 		const body = await response.json()
 		console.log('created on server: ', body)
-		this.products.push(body)
+		return body
     },
 
     delete_on_server: async function(product) {
@@ -278,12 +299,13 @@ const product_list = new Vue({
 
 		if (response.ok) {
 		    console.log('deleted on server.')
-		    this.products = this.products.filter(el => el.id != product.id)
+		    return true
 		}
         else {
             alert(`Error deleting ${product.name} on server.\n\n` +
                   `Status code: ${response.status}\n` +
                   `Status text: ${response.statusText}`)
+            return false
         }
     },
   }
