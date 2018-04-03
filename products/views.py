@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -19,7 +20,7 @@ class MainPage(TemplateView):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return render(request, 'products/main.html', context={})
+            return render(request, 'products/main.html', context={"server_address": settings.SERVER_ADDRESS})
         else:
             return HttpResponseRedirect('/auth/login')
 

@@ -32,15 +32,50 @@ const compare_using_list = (a, b) => {
 }
 
 
+function create_random_index() {
+    const arr = []
+    while(arr.length < 8){
+        const randomnumber = Math.floor(Math.random()*100) + 1;
+        if(arr.indexOf(randomnumber) > -1) continue;
+        arr[arr.length] = randomnumber;
+    }
+    const num = Number(arr.join(''))
+    return num
+}
+
+
+function pluck_from_array(array, key) {
+  return array.map(o => o[key]);
+}
+
+
+/**
+ * Assumes, that server address was passed to base template.
+ */
+function get_server_address() {
+    const server_address = document.getElementById('server_address').getAttribute('value')
+    return server_address
+}
+
+
+function get_csrf_token() {
+    return document.getElementsByName("csrfmiddlewaretoken")[0].value
+}
+
+
 const product_list = new Vue({
   el: '#product_list',
   data: {
     products: [],
+    fields_in_russian: {
+        name: 'название',
+        amount: 'количество',
+    }
   },
 
   methods: {
-    update_products_from_server: async function() {
-        this.products = [
+    get_products_from_server: async function() {
+        /*this.products = [
              {
                 "id": 3,
                 "name": "White Bread",
@@ -53,7 +88,19 @@ const product_list = new Vue({
                 "amount": 1000,
                 "order": 0,
             }
-        ]
+        ]*/
+        server_address = get_server_address()
+
+        const response = await fetch('/api/v1/products/', {
+		    method: 'get',
+		    headers: {
+			    'Content-Type': 'application/json',
+			    },
+		    credentials: 'same-origin',
+		})
+		const body = await response.json()
+		//console.log('response: ', body)
+		this.products = body
     },
 
     sort_products_by_order: function(reverse = false) {
@@ -95,6 +142,7 @@ const product_list = new Vue({
     * Moves current product to one position lower in list.
     */
     move_lower: function(product) {
+        console.log('received product: ', product.name, product.order)
         this.give_order_values()
         const index = this.products.findIndex((el) => el.id == product.id)
 
@@ -106,11 +154,11 @@ const product_list = new Vue({
 
         this.sort_products_by_order()
 
-        this.product_changed(this.products[index])
-        this.product_changed(this.products[index + 1])
+        this.update_on_server_several(this.products[index], this.products[index + 1])
     },
 
     move_higher: function(product) {
+        console.log('received product: ', product.name, product.order)
         this.give_order_values()
         const index = this.products.findIndex((el) => el.id == product.id)
 
@@ -122,22 +170,113 @@ const product_list = new Vue({
 
         this.sort_products_by_order()
 
-        this.product_changed(this.products[index])
-        this.product_changed(this.products[index - 1])
+        this.update_on_server_several(this.products[index], this.products[index - 1])
+    },
+
+    add_product: async function() {
+        let product = {}
+        for (let n of ['name', 'amount']) {
+            let warning = ''
+            while (true) {
+                let input = prompt(warning + '\n' + `Введите, пожалуйста, ${this.fields_in_russian[n]} продукта:`)
+                if (input == null) return
+                if (input == '') {
+                    warning = `Вы не ввели ${this.fields_in_russian[n]} продукта.\n`
+                    continue
+                }
+                if (n == 'amount') {
+                    input = Number(input)
+                    if (isNaN(input)) {
+                        warning = `Вы не ввели число.\n` +
+                                  `Введите, пожалуйста, число, обозначающее количество продуктов.\n`
+                        continue
+                    }
+                }
+                product[n] = input
+                break
+            }
+        }
+        //let index = this.products.push(product) - 1
+        try {
+            await this.create_on_server(product)
+        }
+        catch (err) {
+            this.products.pop()
+            alert(`Извините, произошла ошибка при добавлении продукта: ${err}`)
+        }
+        this.give_order_values()  // also updates order on server
+
+        // hack to work without server connection (index would be applied after response from server)
+        let products_without_index = this.products.filter(el => !el.id)
+        console.log('products_without_index: ', products_without_index)
+        products_without_index.map(el => { el.id = create_random_index() })
+        products_without_index = this.products.filter(el => !el.id)
+        console.log('products_without_index after: ', products_without_index)
+
+        console.log('we got product: ', product)
+    },
+
+    delete_product: async function(product) {
+        if (confirm(`Вы уверены, что хотите удалить продукт "${product.name}" из списка ?`)) {
+            //this.products = this.products.filter(p => p != product)
+            this.delete_on_server(product)
+        }
     },
 
     /**
     * Updates product on server, when product was changed on frontend.
     */
-    product_changed: async function(product) {
-        console.log('product changed: ', product.id)
+    update_on_server: async function(product) {
+        console.log('product changed: ', product.name)
+    },
+
+    update_on_server_several: async function(products) {
+        console.log('products changed: ', products)
+    },
+
+    create_on_server: async function(product) {
+        console.log('creating on server: ', product.name)
+        const response = await fetch('/api/v1/products/', {
+		    method: 'post',
+		    headers: {
+			    'Content-Type': 'application/json',
+			    'X-CSRFToken': get_csrf_token(),
+			    },
+		    credentials: 'same-origin',
+		    body: JSON.stringify(product),
+		})
+		const body = await response.json()
+		console.log('created on server: ', body)
+		this.products.push(body)
+    },
+
+    delete_on_server: async function(product) {
+        console.log('deleting on server: ', product.name)
+        const response = await fetch(`/api/v1/products/${product.id}`, {
+		    method: 'delete',
+		    headers: {
+			    'Content-Type': 'application/json',
+			    'X-CSRFToken': get_csrf_token(),
+			},
+		    credentials: 'same-origin',
+		})
+
+		if (response.ok) {
+		    console.log('deleted on server.')
+		    this.products = this.products.filter(el => el.id != product.id)
+		}
+        else {
+            alert(`Error deleting ${product.name} on server.\n\n` +
+                  `Status code: ${response.status}\n` +
+                  `Status text: ${response.statusText}`)
+        }
     },
   }
 })
 
 
 async function first_load() {
-    await product_list.update_products_from_server()
+    await product_list.get_products_from_server()
     product_list.sort_products_by_order()
 }
 

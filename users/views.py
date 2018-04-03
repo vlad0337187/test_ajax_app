@@ -26,7 +26,7 @@ class RegistrationView(TemplateView):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/testing/main/')
+            return HttpResponseRedirect('/auth/login/')
         else:
             messages.error(request, form.errors)
             return HttpResponseRedirect('/auth/register')

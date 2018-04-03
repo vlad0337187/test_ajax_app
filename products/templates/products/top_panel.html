@@ -1,8 +1,8 @@
 {% load static %}
 
 <div class="top_panel">
-    <button>Главная страница</button>
-    <button>Выход</button>
+    <button onclick="window.location.reload()">Обновить страницу</button>
+    <a href="/auth/logout/" class="like_button">Выход</a>
 </div>
 
 <link rel="stylesheet" href="{% static 'products/css/top_panel.css' %}">

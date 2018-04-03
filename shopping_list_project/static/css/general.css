@@ -80,6 +80,11 @@ input:focus {
 
 
 .like_button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     padding: 15px 30px 15px 30px;
     border: none;
     font-size: 12pt;

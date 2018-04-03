@@ -25,7 +25,9 @@
         {% endfor %}
         </ul>
     {% endif %}
+    {% csrf_token %}
     <script type="text/javascript" src="{% static 'js/vue.js' %}"></script>
+    <div id="server_address" style="display: none" value="{{ server_address }}"></div>
 {% endblock %}
 </body>
 </html>

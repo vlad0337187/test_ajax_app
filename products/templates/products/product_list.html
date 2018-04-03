@@ -7,15 +7,22 @@
     <ol v-if="products.length" class="products">
         <li v-for="(product, index) in products" class="product">
             <span class="product_index">№: {{ index }}</span>&nbsp&nbsp
-            Продукт: <input type="text" v-bind:value="product.name" v-on:change="product_changed(product)"></input>&nbsp&nbsp
-            Количество: <input type="number" min=0 max=1000000 step=0.1 v-bind:value="product.amount" v-on:change="product_changed(product)"></input>&nbsp&nbsp
-            <button v-on:click="move_higher(product)">⋀</button>
+            Продукт: &nbsp
+            <input type="text" v-model="product.name" v-on:change="update_on_server(product)"></input>&nbsp&nbsp
+            Количество: &nbsp
+            <input type="number" min=0 max=1000000 step=0.1 v-model.number="product.amount" v-on:change="update_on_server(product)"></input>&nbsp&nbsp
             <button v-on:click="move_lower(product)">⋁</button>
+            <button v-on:click="move_higher(product)">⋀</button>
+            <button v-on:click="delete_product(product)">⌫</button>
+        </li>
+        <li class="product">
+            <button v-on:click="add_product()" class="product_add_button">+</button>
         </li>
     </ol>
     <div v-else="products" class="products">
         Products are absent yet.
         Please, add some.
+        <button v-on:click="add_product()" class="product_add_button">+</button>
     </div>
 </div>
 {% endverbatim %}
