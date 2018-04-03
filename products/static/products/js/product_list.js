@@ -227,7 +227,22 @@ const product_list = new Vue({
     * Updates product on server, when product was changed on frontend.
     */
     update_on_server: async function(product) {
-        console.log('product changed: ', product.name)
+        console.log('updating on server: ', product.name)
+
+        productNoId = y = Object.assign({}, product);
+        delete productNoId.id
+
+        const response = await fetch(`/api/v1/products/${product.id}/`, {
+		    method: 'put',
+		    headers: {
+			    'Content-Type': 'application/json',
+			    'X-CSRFToken': get_csrf_token(),
+			    },
+		    credentials: 'same-origin',
+		    body: JSON.stringify(productNoId),
+		})
+		const body = await response.json()
+		console.log('updating on server: ', body)
     },
 
     update_on_server_several: async function(products) {
