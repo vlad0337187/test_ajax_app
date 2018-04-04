@@ -2,10 +2,15 @@
 
 
 <h1 class="products_header">Список товаров:</h1>
+
 {% verbatim %}
 <div id="product_list" class="product_list">
+
     <ol v-if="products.length" class="products">
-        <li v-for="(product, index) in products" class="product">
+        <li class="product">
+            <input type="search" v-model="search_word" placeholder="Поиск"></input>
+        </li>
+        <li v-for="(product, index) in filtered_products" class="product">
             <span class="product_index">№: {{ index }}</span>&nbsp&nbsp
             Продукт: &nbsp
             <input type="text" v-model="product.name" v-on:change="update_on_server(product)"></input>&nbsp&nbsp
@@ -19,6 +24,7 @@
             <button v-on:click="add_product()" class="product_add_button">+</button>
         </li>
     </ol>
+
     <div v-else="products" class="products">
         Products are absent yet.
         Please, add some.
@@ -26,5 +32,6 @@
     </div>
 </div>
 {% endverbatim %}
+
  <script type="text/javascript" src="{% static "products/js/product_list.js" %}"></script>
  <link rel="stylesheet" href="{% static 'products/css/product_list.css' %}">

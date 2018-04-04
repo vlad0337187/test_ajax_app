@@ -1,5 +1,5 @@
 .top_panel {
-    position: static;
+    position: relative;
     top: 0;
     left: 0;
     margin: 0 0 70px 0;
@@ -17,7 +17,17 @@
 }
 
 
+.top_panel_plane_left {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+}
+
+
 .top_panel button {
+    position: static;
     padding: 0 30px 0 30px;
     border: none;
     font-size: 12pt;
@@ -35,5 +45,46 @@
     color: hsl(44, 96%, 82%);
     background-color: hsl(10, 2%, 25%);
     text-shadow:  -6px -3px 10px black;
+}
+
+
+.submenu_button {
+    /* Button, which opens submenu. */
+    position: relative;
+    justify-content: center;
+}
+
+
+.submenu_button:hover .submenu {
+    visibility: visible;
+
+	transform: scale(1);
+    opacity: 1;
+}
+
+
+.submenu {
+    visibility: hidden;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    padding: 0px 0px;
+
+    background-color: hsl(40, 0%, 50%);
+    box-shadow: 0 0 20px 3px hsla(40, 0%, 0%, 0.6);
+
+    transform: scale(0);
+    opacity: 0;
+    transition-duration: 0.2s;
+}
+
+
+.submenu button {
+    padding: 15px 30px 15px 30px;
 }
 

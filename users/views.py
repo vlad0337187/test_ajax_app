@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from products.models import ProductList
+
 
 class RegistrationView(TemplateView):
     """
@@ -25,8 +27,9 @@ class RegistrationView(TemplateView):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/auth/login/')
+            user = form.save()
+            ProductList.objects.create(user=user)
+            return render(request, 'users/registered.html')
         else:
             messages.error(request, form.errors)
             return HttpResponseRedirect('/auth/register')

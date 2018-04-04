@@ -19,9 +19,9 @@ function compare_names(a, b) {
 
 
 /**
-* Compares 2 values using .sort() method of array.
-* Is used by other comparing functions.
-*/
+ * Compares 2 values using .sort() method of array.
+ * Is used by other comparing functions.
+ */
 const compare_using_list = (a, b) => {
     switch ([a, b].sort()[0]) {
         case a:
@@ -65,12 +65,31 @@ function get_csrf_token() {
 
 const product_list = new Vue({
   el: '#product_list',
+
   data: {
     products: [],
     fields_in_russian: {
         name: 'название',
         amount: 'количество',
-    }
+    },
+    reverse_order: false,
+    search_word: '',      // search string, by which results will be filtered
+  },
+
+  computed: {
+    filtered_products: function() {
+        return this.products.filter((product) => {
+
+            name_lowered = product.name.toLowerCase()
+            search_word_lowered = this.search_word.toLowerCase()
+            if (name_lowered.startsWith(search_word_lowered)) return true
+
+            string_amount = String(product.amount)
+            if (string_amount.startsWith(search_word_lowered)) return true
+
+            return false
+        })
+    },
   },
 
   methods: {
@@ -103,29 +122,51 @@ const product_list = new Vue({
 		this.products = body
     },
 
+    /**
+     * Used to sort products after they recently received their order numbers.
+     */
     sort_products_by_order: function(reverse = false) {
         this.products.sort(compare_order)
         if (reverse) this.products.reverse()
+
+        this.give_order_values()
+        this.update_on_server_orders(this.products)
     },
 
-    sort_products_by_id: function(reverse = false) {
+    sort_products_by_id: function() {
         this.products.sort(compare_ids)
-        if (reverse) this.products.reverse()
+        if (this.reverse_order) this.products.reverse()
+
+        this.give_order_values()
+        this.update_on_server_orders(this.products)
     },
 
-    sort_products_by_names: function(reverse = false) {
+    sort_products_by_name: function() {
         this.products.sort(compare_names)
-        if (reverse) this.products.reverse()
+        if (this.reverse_order) this.products.reverse()
+
+        this.give_order_values()
+        this.update_on_server_orders(this.products)
     },
 
-    sort_products_by_amount: function(reverse = false) {
+    sort_products_by_amount: function() {
         this.products.sort(compare_amount)
-        if (reverse) this.products.reverse()
+        if (this.reverse_order) this.products.reverse()
+
+        this.give_order_values()
+        this.update_on_server_orders(this.products)
+    },
+
+    sort_products_reverse: function() {
+        this.products.reverse()
+
+        this.give_order_values()
+        this.update_on_server_orders(this.products)
     },
 
     /**
-    * Gives order values to all products depending on their current position in list.
-    */
+     * Gives order values to all products depending on their current position in list.
+     */
     give_order_values: function() {
         let ord_number = 0
         for (let product of this.products) {
@@ -134,13 +175,9 @@ const product_list = new Vue({
         }
     },
 
-    update_orders_on_server: async function() {
-
-    },
-
     /**
-    * Moves current product to one position lower in list.
-    */
+     * Moves current product to one position lower in list.
+     */
     move_lower: function(product) {
         console.log('received product: ', product.name, product.order)
         this.give_order_values()
@@ -154,7 +191,7 @@ const product_list = new Vue({
 
         this.sort_products_by_order()
 
-        this.update_on_server_several([this.products[index], this.products[index + 1]])
+        this.update_on_server_orders([this.products[index], this.products[index + 1]])
     },
 
     move_higher: function(product) {
@@ -170,7 +207,7 @@ const product_list = new Vue({
 
         this.sort_products_by_order()
 
-        this.update_on_server_several([this.products[index], this.products[index - 1]])
+        this.update_on_server_orders([this.products[index], this.products[index - 1]])
     },
 
     add_product: async function() {
@@ -231,8 +268,8 @@ const product_list = new Vue({
     },
 
     /**
-    * Updates product on server, when product was changed on frontend.
-    */
+     * Updates product on server, when product was changed on frontend.
+     */
     update_on_server: async function(product) {
         console.log('updating on server: ', product.name)
 
@@ -253,8 +290,8 @@ const product_list = new Vue({
 		return body
     },
 
-    update_on_server_several: async function(products) {
-        console.log('updating several on server: ', JSON.stringify(products))
+    update_on_server_orders: async function(products) {
+        console.log('updating orders on server: ', JSON.stringify(products))
 
         const response = await fetch(`/api/v1/products/set_order/`, {
 		    method: 'patch',
@@ -266,7 +303,7 @@ const product_list = new Vue({
 		    body: JSON.stringify(products),
 		})
 		const body = await response.json()
-		console.log('updated several on server: ', body)
+		console.log('updated orders on server: ', body)
 		return body
     },
 

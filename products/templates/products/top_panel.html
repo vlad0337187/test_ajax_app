@@ -1,13 +1,29 @@
 {% load static %}
 
 <div class="top_panel">
-    <div class="buttons_horizontal_plane">
+    <div class="top_panel_plane_left">
         <button onclick="window.location.reload()" class="button_horizontal_margin">
             Обновить страницу
         </button>
-        <button onclick="window.location.reload()" class="button_horizontal_margin">
+        <div class="like_button submenu_button button_horizontal_margin">
             Сортировать ⇣
-        </button>
+            <div id="sorting_submenu" class="submenu">
+                <button onclick="product_list.sort_products_by_name()" class="">
+                    по названию
+                </button>
+                <button onclick="product_list.sort_products_by_amount()" class="button_horizontal_margin">
+                    по количеству
+                </button>
+                <button onclick="product_list.sort_products_by_id()" class="button_horizontal_margin">
+                    по умолчанию
+                </button>
+                <button
+                    onclick="product_list.reverse_order = true; product_list.sort_products_reverse()"
+                    class="button_horizontal_margin">
+                    обратный порядок
+                </button>
+            </div>
+        </div>
     </div>
     <a href="/auth/logout/" class="like_button">Выход</a>
 </div>
