@@ -41,7 +41,6 @@
 .top_panel button:hover {
     cursor: pointer;
 
-    /*color: hsl(45, 44%, 91%);*/
     color: hsl(44, 96%, 82%);
     background-color: hsl(10, 2%, 25%);
     text-shadow:  -6px -3px 10px black;

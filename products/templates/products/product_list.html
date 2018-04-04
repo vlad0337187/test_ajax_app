@@ -16,9 +16,11 @@
             <input type="text" v-model="product.name" v-on:change="update_on_server(product)"></input>&nbsp&nbsp
             Количество: &nbsp
             <input type="number" min=0 max=1000000 step=0.1 v-model.number="product.amount" v-on:change="update_on_server(product)"></input>&nbsp&nbsp
-            <button v-on:click="move_lower(product)">⋁</button>
-            <button v-on:click="move_higher(product)">⋀</button>
-            <button v-on:click="delete_product(product)">⌫</button>
+            <div class="product_move_buttons_plane">
+                <button v-on:click="move_lower(product)">⋁</button>
+                <button v-on:click="move_higher(product)">⋀</button>
+                <button v-on:click="delete_product(product)">⌫</button>
+            </div>
         </li>
         <li class="product">
             <button v-on:click="add_product()" class="product_add_button">+</button>
